@@ -11,37 +11,33 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.ucne.edu.ticketsistemaretrofit.presentation.navigation.NavHostSistemas
 import com.ucne.edu.ticketsistemaretrofit.ui.theme.TicketSistemaRetrofitTheme
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.HiltAndroidApp
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             TicketSistemaRetrofitTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                val navHost = rememberNavController()
+                NavHostSistemas(navHost)
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     TicketSistemaRetrofitTheme {
-        Greeting("Android")
+        val navHost = rememberNavController()
+        NavHostSistemas(navHost)
     }
 }

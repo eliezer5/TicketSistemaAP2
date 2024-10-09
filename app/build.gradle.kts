@@ -65,16 +65,18 @@ dependencies {
     implementation(libs.androidx.material3)
 
     implementation("com.google.dagger:hilt-android:2.51")
+    implementation(libs.androidx.lifecycle.runtime.compose.android)
     ksp("com.google.dagger:hilt-android-compiler:2.51")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
-
+    implementation(libs.kotlinx.serialization.json)
     //Retrofit
     implementation(libs.retrofit)
     implementation(libs.moshi.kotlin)
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation(libs.androidx.espresso.core)
-
+    implementation(libs.androidx.navigation.compose)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
