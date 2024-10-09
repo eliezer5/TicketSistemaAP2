@@ -1,9 +1,12 @@
 package com.ucne.edu.ticketsistemaretrofit.repository
 
+import androidx.test.espresso.core.internal.deps.dagger.Provides
 import com.ucne.edu.ticketsistemaretrofit.data.remote.SistemaAPI
 import com.ucne.edu.ticketsistemaretrofit.data.remote.dto.SistemasDto
 import com.ucne.edu.ticketsistemaretrofit.utils.Resource
 import javax.inject.Inject
+
+
 
 class SistemaRepository @Inject constructor(
     private val sistemaAPI: SistemaAPI
