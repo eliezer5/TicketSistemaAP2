@@ -1,6 +1,7 @@
 package com.ucne.edu.ticketsistemaretrofit.presentation.sistema
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -32,7 +33,7 @@ fun AddSistemaScreen(
     goToBack: () -> Unit,
     viewModel: SistemaViewModel = hiltViewModel(),
 
-) {
+    ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     AddSistemaBodyScreen(uiState, goToBack, { event -> viewModel.onEvent(event) })
 
@@ -44,22 +45,14 @@ fun AddSistemaBodyScreen(
     goToBack: () -> Unit,
     onEvent: (SistemaEvent) -> Unit
 ) {
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(onClick = goToBack) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Volver"
-                )
-            }
-        }
-    ) { innerPadding ->
+    Box(
+    ) {
         Column(
             modifier = Modifier
-                .padding(innerPadding)
+
                 .fillMaxSize()
         ) {
-            Text(text = "Agregar Ticket", modifier = Modifier.align(Alignment.CenterHorizontally))
+            Text(text = "Agregar Sistema", modifier = Modifier.align(Alignment.CenterHorizontally))
             Spacer(modifier = Modifier.height(20.dp))
 
             OutlinedTextField(
@@ -68,8 +61,7 @@ fun AddSistemaBodyScreen(
                 onValueChange = { onEvent(SistemaEvent.onChangeNombre(it)) },
                 modifier = Modifier.fillMaxWidth()
             )
-
-            uiState.error.let { error ->
+            uiState.errorNombre.let { error ->
                 Text(text = error, color = Color.Red)
             }
 
@@ -79,7 +71,9 @@ fun AddSistemaBodyScreen(
                 onValueChange = { onEvent(SistemaEvent.onChangeDescription(it)) },
                 modifier = Modifier.fillMaxWidth()
             )
-
+            uiState.errorDescription.let { error ->
+                Text(text = error, color = Color.Red)
+            }
             Spacer(modifier = Modifier.height(10.dp))
             Row(
                 modifier = Modifier.fillMaxSize(),
@@ -93,6 +87,18 @@ fun AddSistemaBodyScreen(
                     Text(text = "Guardar")
                 }
             }
+
+
+        }
+        FloatingActionButton(
+            onClick = goToBack, modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(top = 10.dp, end = 20.dp, bottom = 35.dp)
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = "Volver"
+            )
         }
 
     }

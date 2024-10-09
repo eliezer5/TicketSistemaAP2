@@ -2,6 +2,7 @@ package com.ucne.edu.ticketsistemaretrofit.presentation.ticket
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,6 +28,7 @@ import com.ucne.edu.ticketsistemaretrofit.data.remote.dto.TicketDto
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.ucne.edu.ticketsistemaretrofit.presentation.sistema.SistemaViewModel
 
 
 @Composable
@@ -45,18 +47,13 @@ fun ListTicketBodyScreen(
     uiState: Uistate,
     goToAdd: () -> Unit,
     onSelect: (Int) -> Unit,
+    viewModel: SistemaViewModel = hiltViewModel()
 ) {
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(onClick = goToAdd) {
-                Icon(imageVector = Icons.Filled.Add, contentDescription = "Agregar Venta")
-            }
-        }
-    ) { innerPadding ->
+    Box(
+    ) {
         Column(
             modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
+                .fillMaxSize().padding(top = 16.dp)
         ) {
             Text(text = "Lista Tickets", modifier = Modifier.align(Alignment.CenterHorizontally))
             Spacer(modifier = Modifier.height(20.dp))
@@ -69,12 +66,12 @@ fun ListTicketBodyScreen(
                 Text(
                     text = "Asunto",
                     style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(0.8f)
                 )
                 Text(
                     text = "Descripción ",
                     style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1.2f)
                 )
 
                 Text(
@@ -99,16 +96,25 @@ fun ListTicketBodyScreen(
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(uiState.tickets) {
-                    TicketRow(it, onSelect)
+                    TicketRow(it, onSelect, viewModel)
                 }
             }
+        }
+
+        FloatingActionButton(
+            onClick = goToAdd,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(top = 10.dp, end = 20.dp, bottom = 35.dp)
+        ) {
+            Icon(imageVector = Icons.Filled.Add, contentDescription = "Agregar Venta")
         }
     }
 }
 
 
 @Composable
-fun TicketRow(it: TicketDto, onSelect: (Int) -> Unit) {
+fun TicketRow(it: TicketDto, onSelect: (Int) -> Unit, viewModel: SistemaViewModel) {
     Row(
         modifier = Modifier
             .clickable { onSelect(it.ticketId ?: 0) }
@@ -117,12 +123,12 @@ fun TicketRow(it: TicketDto, onSelect: (Int) -> Unit) {
         Text(
             text = it.asunto ?: "",
             style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(0.8f)
         )
         Text(
             text = it.descripcion.toString(),
             style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1.2f)
         )
         Text(
             text = it.fecha.toString(),
@@ -130,7 +136,7 @@ fun TicketRow(it: TicketDto, onSelect: (Int) -> Unit) {
             modifier = Modifier.weight(1f)
         )
         Text(
-            text = it.sistemaId.toString(),
+            text = viewModel.getDescripcionById(it.sistemaId?:0),
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.weight(1f)
         )

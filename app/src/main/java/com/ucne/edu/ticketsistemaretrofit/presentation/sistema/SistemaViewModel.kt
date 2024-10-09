@@ -26,30 +26,20 @@ class SistemaViewModel @Inject constructor(
     private fun getSistemas(){
         viewModelScope.launch {
             val result = sistemaRepository.getSistemas()
-            when(result) {
-                is Resource.Error -> _uiState.update { it.copy(error = "no obtiene") }
-                is Resource.Loading -> TODO()
-                is Resource.Success -> _uiState.update {
-                    it.copy(
-                        sistemas = result.data?: emptyList()
-                    )
-                }
+
+            _uiState.update {
+                it.copy(
+                    sistemas = result.data?: emptyList()
+                )
             }
         }
     }
 
-
     private fun save(){
         viewModelScope.launch {
-            val result = sistemaRepository.addSistema(uiState.value.toEntity())
-            when(result) {
-                is Resource.Error -> _uiState.update { it.copy(error = "no agrega") }
-                is Resource.Loading -> TODO()
-                is Resource.Success -> _uiState.update {
-                    it.copy(
-                        mensaje = "GuardadoCorrectamente"
-                    )
-                }
+            if (validar()){
+                sistemaRepository.addSistema(uiState.value.toEntity())
+                nuevo()
             }
         }
     }
@@ -69,6 +59,46 @@ class SistemaViewModel @Inject constructor(
                 descripcionSistema = description
             )
         }
+    }
+
+    private fun nuevo() {
+        _uiState.update {
+            it.copy(
+                sistemaId = null,
+                nombreSistema = "",
+                descripcionSistema = "",
+                errorNombre = "",
+                errorDescription = ""
+            )
+        }
+    }
+
+    private fun validar(): Boolean{
+
+        var error = false
+
+        _uiState.update {
+            it.copy(
+               errorNombre = if (uiState.value.nombreSistema.isBlank()){
+                   error = true
+                   "El nombre no puede estar vacio"
+               }else "",
+
+                errorDescription = if (uiState.value.descripcionSistema.isBlank()){
+                    error = true
+                    "La descripcion no puede estar vacia"
+                }else ""
+            )
+        }
+        return !error
+    }
+
+    fun getDescripcionById(prioridadId: Int): String {
+
+        val descripcion =
+            uiState.value.sistemas.firstOrNull { it.sistemaId == prioridadId }?.nombreSistema
+                ?: ""
+        return descripcion
     }
 
     fun onEvent(event: SistemaEvent){

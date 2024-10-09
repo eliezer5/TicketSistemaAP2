@@ -27,29 +27,20 @@ class TicketViewModel @Inject constructor(
     private fun getTickets() {
         viewModelScope.launch {
             val result = ticketRepository.getTickets()
-            when (result) {
-                is Resource.Error -> _uiState.update { it.copy(error = "no obtiene") }
-                is Resource.Loading -> TODO()
-                is Resource.Success -> _uiState.update {
-                    it.copy(
-                        tickets = result.data ?: emptyList()
-                    )
-                }
+
+            _uiState.update {
+                it.copy(
+                    tickets = result.data ?: emptyList()
+                )
             }
         }
     }
 
     private fun save() {
         viewModelScope.launch {
-            val result = ticketRepository.addTicket(uiState.value.toEntity())
-            when (result) {
-                is Resource.Error -> _uiState.update { it.copy(error = "no agrega") }
-                is Resource.Loading -> TODO()
-                is Resource.Success -> _uiState.update {
-                    it.copy(
-                        mensaje = "GuardadoCorrectamente"
-                    )
-                }
+            if (validar()) {
+                ticketRepository.addTicket(uiState.value.toEntity())
+                nuevo()
             }
         }
     }
@@ -94,6 +85,56 @@ class TicketViewModel @Inject constructor(
         }
     }
 
+    private fun validar(): Boolean {
+        var error = false
+
+        _uiState.update {
+            it.copy(
+                errorFecha = if (it.fecha.isBlank()) {
+                    error = true
+                    "La fecha no puede estar vacia"
+                } else "",
+                errorAsunto = if (it.asunto.isBlank()) {
+                    error = true
+                    "El asunto no puede estar vacio"
+                } else "",
+                errorDescripcion = if (it.descripcion.isBlank()) {
+                    error = true
+                    "La descripcion no puede estar vacia"
+                } else "",
+                errorSolicitadoPor = if (it.solicitadoPor.isBlank()) {
+                    error = true
+                    "Solicitado por no puede estar vacio"
+                } else "",
+                errorSistemaId = if (it.sistemaId == null) {
+                    error = true
+                    "El sistema no puede estar vacio"
+                } else ""
+
+            )
+        }
+        return !error
+
+    }
+
+    private fun nuevo() {
+        _uiState.update {
+            it.copy(
+                ticketId = null,
+                fecha = "",
+                asunto = "",
+                descripcion = "",
+                sistemaId = null,
+                solicitadoPor = "",
+                errorFecha = "",
+                errorAsunto = "",
+                errorDescripcion = "",
+                errorSolicitadoPor = "",
+                errorSistemaId = ""
+            )
+        }
+    }
+
     fun onEvent(event: TicketEvent) {
         when (event) {
             TicketEvent.Save -> save()
@@ -105,6 +146,4 @@ class TicketViewModel @Inject constructor(
 
         }
     }
-
-
 }

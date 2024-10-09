@@ -4,10 +4,11 @@ import com.ucne.edu.ticketsistemaretrofit.data.remote.dto.SistemasDto
 
 data class Uistate(
     val sistemaId: Int? = null,
-    val nombreSistema: String? = "",
+    val nombreSistema: String = "",
     val descripcionSistema: String = "",
     val sistemas: List<SistemasDto> = emptyList(),
-    val error: String = "",
+    val errorNombre: String = "",
+    val errorDescription: String = "",
     val mensaje: String = ""
 
 )

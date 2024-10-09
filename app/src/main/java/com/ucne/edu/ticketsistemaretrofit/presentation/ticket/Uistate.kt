@@ -11,7 +11,13 @@ data class Uistate(
     val error: String = "",
     val mensaje: String = "",
     val sistemaId: Int? = null,
-    val solicitadoPor: String = ""
+    val solicitadoPor: String = "",
+    val errorFecha: String = "",
+    val errorAsunto: String = "",
+    val errorDescripcion: String = "",
+    val errorSolicitadoPor: String = "",
+    val errorSistemaId: String = ""
+
 )
 
 fun Uistate.toEntity() = TicketDto(

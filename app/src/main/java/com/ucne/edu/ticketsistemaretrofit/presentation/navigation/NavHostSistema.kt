@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -27,10 +28,13 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.ucne.edu.ticketsistemaretrofit.presentation.sistema.AddSistemaScreen
 import com.ucne.edu.ticketsistemaretrofit.presentation.sistema.ListSistemaScreen
 import com.ucne.edu.ticketsistemaretrofit.presentation.ticket.AddTicketScreen
@@ -52,7 +56,6 @@ fun NavHostSistemas(
                 Text(text = "Menu")
                 Spacer(modifier = Modifier.padding(10.dp))
 
-
                 NavigationDrawerItem(
                     label = { Text(text = "Lista sistemas") },
                     selected = false,
@@ -61,7 +64,8 @@ fun NavHostSistemas(
                             drawerState.close()
                         }
                         navHostController.navigate(Screen.SistemaList)
-                    })
+                    }
+                )
 
                 NavigationDrawerItem(
                     label = { Text(text = "Lista Tickets") },
@@ -71,70 +75,62 @@ fun NavHostSistemas(
                             drawerState.close()
                         }
                         navHostController.navigate(Screen.TicketList)
-                    })
-
-
+                    }
+                )
             }
         },
     ) {
-        Column(
-            modifier = Modifier.offset(y = (-19).dp)
-        ) {
-
-            TopAppBar(
-                title = {"Menu"},
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            scope.launch {
-                                drawerState.apply {
-                                    if (isClosed) open() else close()
-                                }
+        TopAppBar(
+            title = {"Menu"},
+            navigationIcon = {
+                IconButton(
+                    onClick = {
+                        scope.launch {
+                            drawerState.apply {
+                                if (isClosed) open() else close()
                             }
                         }
-                    ) {
-                        Icon(Icons.Filled.Add, contentDescription = "Abrir menú")
                     }
-                },
-            )
-        }
-        Box(
-            modifier = Modifier.padding(top = 50.dp)
+                ) {
+                    Icon(Icons.Filled.Add, contentDescription = "Abrir menú")
+                }
+            },
+
+        )
+        Column(
+
         ) {
-            NavHost(
-                navController = navHostController,
-                startDestination = Screen.SistemaList,
 
-            ) {
 
-                composable<Screen.SistemaList> {
-
-                    ListSistemaScreen(
-                        goToAdd = { navHostController.navigate(Screen.Sistema(0)) },
-                        onSelect = { navHostController.navigate(Screen.Sistema(it)) },
-
+            // Contenido del NavHost debajo del TopAppBar
+            Box(modifier = Modifier.padding(top = 80.dp)) {
+                NavHost(
+                    navController = navHostController,
+                    startDestination = Screen.SistemaList
+                ) {
+                    composable<Screen.SistemaList> {
+                        ListSistemaScreen(
+                            goToAdd = { navHostController.navigate(Screen.Sistema(0)) },
+                            onSelect = { navHostController.navigate(Screen.Sistema(it)) }
                         )
-                }
+                    }
 
-                composable<Screen.Sistema> {
+                    composable<Screen.Sistema> {
+                        AddSistemaScreen(goToBack = { navHostController.navigate(Screen.SistemaList) })
+                    }
 
-                    AddSistemaScreen(goToBack = { navHostController.navigate(Screen.SistemaList) })
-                }
+                    composable<Screen.TicketList> {
+                        ListTicketScreen(
+                            goToAdd = { navHostController.navigate(Screen.Ticket(0)) },
+                            onSelect = { navHostController.navigate(Screen.Ticket(it)) }
+                        )
+                    }
 
-                composable<Screen.TicketList> {
-                    ListTicketScreen(
-                        goToAdd = { navHostController.navigate(Screen.Ticket(0)) },
-                        onSelect = { navHostController.navigate(Screen.Ticket(it)) }
-                    )
+                    composable<Screen.Ticket> {
+                        AddTicketScreen(goToBack = { navHostController.navigate(Screen.TicketList) })
+                    }
                 }
-                composable<Screen.Ticket> {
-                    AddTicketScreen(goToBack = { navHostController.navigate(Screen.TicketList) })
-                }
-
             }
-
         }
     }
-
-
 }

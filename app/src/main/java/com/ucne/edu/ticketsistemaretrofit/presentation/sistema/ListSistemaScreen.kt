@@ -92,7 +92,7 @@ fun ListSistemaBodyScreen(
         onClick = goToAdd,
         modifier = Modifier
             .align(Alignment.BottomEnd)
-            .padding(16.dp)
+            .padding(top = 10.dp, end = 20.dp, bottom = 35.dp)
     ) {
         Icon(imageVector = Icons.Filled.Add, contentDescription = "Agregar Venta")
     }

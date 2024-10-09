@@ -72,20 +72,10 @@ fun AddTicketBodyScreen(
             showDatePicker = false
         }
     }
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(onClick = goToBack) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Volver"
-                )
-            }
-        }
-    ) { innerPadding ->
+    Box(
+    ) {
         Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
+            modifier = Modifier.fillMaxSize().padding(top = 16.dp)
         ) {
             Text(text = "Agregar Ticket", modifier = Modifier.align(Alignment.CenterHorizontally))
             Spacer(modifier = Modifier.height(20.dp))
@@ -100,6 +90,9 @@ fun AddTicketBodyScreen(
                 onValueChange = { onEvent(TicketEvent.OnChangeAsunto(it)) },
                 modifier = Modifier.fillMaxWidth()
             )
+            uiState.errorAsunto.let { error ->
+                Text(text = error, color = Color.Red)
+            }
 
             OutlinedTextField(
                 label = { Text(text = "Descripción") },
@@ -107,6 +100,10 @@ fun AddTicketBodyScreen(
                 onValueChange = { onEvent(TicketEvent.OnChangeDescripcion(it)) },
                 modifier = Modifier.fillMaxWidth()
             )
+            uiState.errorDescripcion.let { error ->
+                Text(text = error, color = Color.Red)
+            }
+
             OutlinedTextField(
                 value = uiState.fecha,
                 onValueChange = {},
@@ -123,6 +120,9 @@ fun AddTicketBodyScreen(
                     .fillMaxWidth()
                     .height(64.dp)
             )
+            uiState.errorFecha.let { error ->
+                Text(text = error, color = Color.Red)
+            }
 
             if (showDatePicker) {
                 Popup(
@@ -148,6 +148,9 @@ fun AddTicketBodyScreen(
                 label = "Selecciona una Prioridad",
                 onOptionSelected = { onEvent(TicketEvent.OnChangeSistemaId(it)) }
             )
+            uiState.errorSistemaId.let { error ->
+                Text(text = error, color = Color.Red)
+            }
 
             OutlinedTextField(
                 label = { Text(text = "Solicitado Por") },
@@ -155,12 +158,16 @@ fun AddTicketBodyScreen(
                 onValueChange = { onEvent(TicketEvent.OnChangeSolicitadoPor(it)) },
                 modifier = Modifier.fillMaxWidth()
             )
+            uiState.errorSolicitadoPor.let { error ->
+                Text(text = error, color = Color.Red)
+            }
+
             Spacer(modifier = Modifier.height(10.dp))
 
-            Row (
+            Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
-            ){
+            ) {
                 OutlinedButton(onClick = {
                     onEvent(TicketEvent.Save)
                 }) {
@@ -169,6 +176,16 @@ fun AddTicketBodyScreen(
                 }
             }
 
+        }
+        FloatingActionButton(
+            onClick = goToBack, modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(top = 10.dp, end = 20.dp, bottom = 35.dp)
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = "Volver"
+            )
         }
     }
 }

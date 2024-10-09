@@ -5,6 +5,7 @@ import com.ucne.edu.ticketsistemaretrofit.data.remote.dto.TicketDto
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface SistemaAPI {
 
